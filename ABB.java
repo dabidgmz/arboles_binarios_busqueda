@@ -1,6 +1,6 @@
 public class ABB {
     Nodo r;
-
+    int altura;
     public ABB() {
         r = null;
     }
@@ -72,7 +72,7 @@ public class ABB {
             System.out.println("Elemento no encontrado");
         } else {
             if (r.dato == valor) {
-                System.out.println("Elemento encontrado en el nivel 0");
+                System.out.println("Elemento encontrado en el nivel 1");
             } else {
                 System.out.println("Elemento encontrado en nivel " + (R.nivel + 1));
             }
@@ -110,45 +110,93 @@ public class ABB {
         }
     }
 
-    public Nodo Eliminar(Nodo raizSubarbol, int valor) {
-        if (raizSubarbol == null) {
-            System.out.println("El valor no se encuentra en el ABB, o el ABB está vacío.");
-            return raizSubarbol;
-        }
-
-        if (valor < raizSubarbol.dato) {
-            raizSubarbol.izq = Eliminar(raizSubarbol.izq, valor);
-        } else if (valor > raizSubarbol.dato) {
-            raizSubarbol.der = Eliminar(raizSubarbol.der, valor);
+    public Nodo Eliminar(int valor) {
+        altura = 0; // Declare altura here
+        Nodo R = Buscar(r, valor, 0);
+        if (R == null) {
+            System.out.println("Elemento no encontrado");
+            return null;
         } else {
-            if (raizSubarbol.izq == null) {
-                return raizSubarbol.der;
-            } else if (raizSubarbol.der == null) {
-                return raizSubarbol.izq;
+            Nodo T = new Nodo();
+            if (R.dato == valor) {
+                T = R;
+            } else {
+                if (valor < R.dato) {
+                    T = R.izq;
+                } else {
+                    T = R.der;
+                }
             }
-            Nodo sucesor = encontrarSucesor(raizSubarbol.der);
-            raizSubarbol.der = Eliminar(raizSubarbol.der, sucesor.dato);
-            raizSubarbol.dato = sucesor.dato;
-            System.out.println("Se eliminó el valor: " + valor);
+            if (T == R && T.izq == null && T.der == null) {
+                r = null;
+                return T;
+            }
+            if (T == R && (T.izq == null || T.der == null)) {
+                if (T.izq != null) {
+                    r = T.izq;
+                    T.izq = null;
+                } else {
+                    r = T.der;
+                    T.der = null;
+                }
+                return T;
+            }
+            if (T.izq == null && T.der == null) {
+                if (R.izq == T) {
+                    R.izq = null;
+                } else {
+                    R.der = null;
+                }
+                return T;
+            }
+            if (T.izq == null) {
+                if (R.izq == T) {
+                    R.izq = T.der;
+                } else {
+                    R.der = T.der;
+                }
+                T.der = null;
+                return T;
+            }
+            if (T.der == null) {
+                if (R.izq == T) {
+                    R.izq = T.izq;
+                } else {
+                    R.der = T.izq;
+                }
+                T.izq = null;
+                return T;
+            }
+            if (T.izq != null && T.der != null) {
+                Nodo Q = T.izq;
+                Nodo A = T;
+                while (Q.der != null) {
+                    A = Q;
+                    Q = Q.der;
+                }
+                int temp;
+                temp = Q.dato;
+                Q.dato = T.dato;
+                T.dato = temp;
+                if (A == T) {
+                    A.izq = Q.izq;
+                } else {
+                    A.der = Q.izq;
+                    Q.izq = null;
+                    return Q;
+                }
+            }
+            return null;
         }
-        return raizSubarbol;
-    }
-
-    private Nodo encontrarSucesor(Nodo nodo) {
-        while (nodo.izq != null) {
-            nodo = nodo.izq;
-        }
-        return nodo;
     }
 
     public void Modificar(int valorM, int valorN) {
         Nodo nodoModificar = Buscar(r, valorM, 0);
-
         if (nodoModificar == null) {
             System.out.println("El valor " + valorM + " no existe en el árbol.");
             return;
         }
-        r = Eliminar(r, valorM);
+        r = Eliminar(valorM);
         Insertar(r, valorN);
         System.out.println("El valor " + valorM + " ha sido modificado a " + valorN + " en el árbol.");
     }

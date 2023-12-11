@@ -6,7 +6,7 @@ public class Menu {
         ABB abb = new ABB();
         boolean continuar = true;
         int opcion;
-        
+
         while (continuar) {
             System.out.println();
             System.out.println("1. Inicializar");
@@ -18,9 +18,9 @@ public class Menu {
             System.out.println("7. Créditos");
             System.out.println("8. Salir");
             System.out.print("Selecciona una opción: ");
-            
+
             opcion = scanner.nextInt();
-            
+
             switch (opcion) {
                 case 1:
                     abb.EliminarABB(abb.r);
@@ -60,14 +60,14 @@ public class Menu {
                 case 5:
                     System.out.println("Ingrese el valor a eliminar:");
                     int valore = scanner.nextInt();
-                    abb.r = abb.Eliminar(abb.r, valore);
+                    abb.Eliminar(valore);
                     break;
                 case 6:
                     System.out.println("Ingrese el valor a modificar:");
                     int valorm = scanner.nextInt();
                     System.out.println("Ingrese el valor nuevo:");
                     int valorn = scanner.nextInt();
-                    abb.r = abb.Eliminar(abb.r, valorm);
+                    abb.Eliminar(valorm);
                     abb.Insertar(abb.r, valorn);
                     System.out.println("El valor " + valorm + " ha sido modificado a " + valorn + " en el árbol.");
                     break;
